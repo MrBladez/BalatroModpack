@@ -1,0 +1,57 @@
+[manifest]
+version = "1.0.0"
+dump_lua = true
+priority = 0
+
+[[patches]]
+[patches.copy]
+target = "main.lua"
+position = "append"
+sources = ["index.lua"]
+
+[[patches]]
+[patches.pattern]
+target = "engine/controller.lua"
+pattern = '''self.held_key_times[key] = 0'''
+position = "after"
+payload = '''
+handy_move_highlight_in_area(key)
+'''
+match_indent = true
+overwrite = false
+
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = '''function Card:click()'''
+position = "after"
+payload = '''
+if handy_insta_actions(self) then return end
+last_clicked_card = self
+'''
+match_indent = true
+overwrite = false
+
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = '''function Card:hover()'''
+position = "after"
+payload = '''
+if handy_insta_highlight_card(self) then return end
+if handy_dangerous_insta_actions(self) then return end
+'''
+match_indent = true
+overwrite = false
+
+
+[[patches]]
+[patches.pattern]
+target = "functions/button_callbacks.lua"
+pattern = '''if e.config.id == 'buy_and_use' then'''
+position = "before"
+payload = '''
+if c1.ability then c1.ability.handy_dangerous_actions_used = nil end
+'''
+match_indent = true
+overwrite = false

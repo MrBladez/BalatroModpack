@@ -1,0 +1,13 @@
+[manifest]
+version = "1.0.0"
+dump_lua = true
+priority = 69
+
+[[patches]] 
+[patches.pattern]
+target = "cardarea.lua"
+pattern = "self.children.area_uibox:draw()"
+position = "after"
+payload = '''
+Cartomancer.add_visibility_controls()'''
+match_indent = true
